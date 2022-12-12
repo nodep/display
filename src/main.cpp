@@ -1,22 +1,26 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <stdint.h>
 
 #include <avr/io.h>
 #include <avr/pgmspace.h>
 #include <util/delay.h>
 
 #include "hw.h"
-#include "avrdbg.h"
-#include "watch.h"
 
-#include "pedals.h"
-#include "display.h"
+#include "avrdbg.h"
+#include "graph.h"
 #include "graphtext.h"
+
+#ifdef __AVR_ATmega2560__
+	#include "display9486.h"
+	using Display = Display9486;
+#else
+	#include "display.h"
+#endif
 
 const int DIAL_ARC_POINTS = 85;
 
-struct { Coord x, y; } const dial_arc[DIAL_ARC_POINTS] PROGMEM = {
+struct { uint8_t x, y; } const dial_arc[DIAL_ARC_POINTS] PROGMEM = {
 { 6,34},{ 5,33},{ 4,32},{ 4,31},{ 3,30},{ 3,29},{ 2,28},{ 2,27},{ 2,26},{ 1,25},
 { 1,24},{ 1,23},{ 1,22},{ 1,21},{ 1,20},{ 1,19},{ 1,18},{ 1,17},{ 2,16},{ 2,15},
 { 2,14},{ 3,13},{ 3,12},{ 4,11},{ 4,10},{ 5, 9},{ 6, 8},{ 7, 7},{ 7, 7},{ 8, 6},
@@ -91,11 +95,11 @@ void refresh_screen()
 	Display d;
 
 	// the battery
-	const uint8_t battery = rand() % 0x80;
+	const uint8_t battery = rand() & 0x7f;
 	fill_rect(d, 0, 0, battery, 3, colGreen);
-	fill_rect(d, battery, 0, 127 - battery, 3, colBlack);
+	fill_rect(d, battery, 0, 128 - battery, 3, colBlack);
 
-	// the selected effect name
+	// print some text
 	{
 		const char* names[] = {"Reverb", "Chorus", "Delay"};
 		const uint8_t namendx = rand() % 3;
@@ -109,9 +113,9 @@ void refresh_screen()
 	}
 
 	// draw the knobs
-	draw_dial_at("green",  rand() % DIAL_ARC_POINTS, 0, 36, colGreen);
+	draw_dial_at("green", rand() % DIAL_ARC_POINTS, 0, 36, colGreen);
 	draw_dial_at("blue", rand() % DIAL_ARC_POINTS, 64, 36, colBlue);
-	draw_dial_at("red",  rand() % DIAL_ARC_POINTS, 0, 95, colRed);
+	draw_dial_at("red", rand() % DIAL_ARC_POINTS, 0, 95, colRed);
 	draw_dial_at("white", rand() % DIAL_ARC_POINTS, 64, 95, colWhite);
 }
 
@@ -123,7 +127,7 @@ int main()
 
 	d.init();
 
-	fill(d, colBlack);
+	fill(d, colRed);
 
 	while (true)
 	{

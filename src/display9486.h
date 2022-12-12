@@ -1,6 +1,5 @@
 #pragma once
 
-#include "lcd_registers.h"
 #include "graph.h"
 
 using rstPin = IoPin<'F', 4>;
@@ -98,13 +97,6 @@ private:
         cdPin::high();
     }
 
-    static void send_command(const uint16_t cmd, uint8_t* block, int8_t N)
-    {
-        writeCmd16(cmd);
-        while (N-- > 0)
-            write8(*block++);
-    }
-
     static void set_addr_window(Coord x1, Coord y1, Coord x2, Coord y2);
 
     static uint8_t read8();
@@ -112,6 +104,9 @@ private:
 
     static uint16_t read_reg(uint16_t reg, int8_t index);
     static uint16_t read_ID();
+
+    static void setWriteDir();
+    static void setReadDir();
 };
 
 template <>

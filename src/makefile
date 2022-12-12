@@ -1,13 +1,15 @@
-TARGET  = fender_foot
-DEVICE  = atmega2560
-#DEVICE  = avr128da48
+TARGET  = displays
+#DEVICE  = atmega2560
+DEVICE  = avr128da48
 
 ifeq ($(DEVICE), avr128da48)
+  # Curiosity Nano with avr128da48
   AVRDUDE = avrdude -c pkobn_updi -p $(DEVICE)
   DISPLAY = display.o
   F_CPU = 24000000
 else
-  AVRDUDE = avrdude -c -patmega2560 -cwiring -PCOM4 -b115200 -D -p $(DEVICE)
+  # Arduino Mega 2560
+  AVRDUDE = avrdude -c wiring -P COM4 -b 115200 -D -p $(DEVICE)
   DISPLAY = display9486.o
   F_CPU = 16000000
 endif
@@ -30,13 +32,10 @@ LFLAGS  = -Wl,--relax,--gc-sections
 # https://packs.download.microchip.com/
 # The file has an extension atpack, but it is actually a zip file.
 # Rename it and unzip.
-# You need to copy the include files, device specs and .o files
-# from the unzipped atpack to avr-gcc respective directories.
-# You can use the script in tools to help with that.
 COMPILE = avr-g++ -mmcu=$(DEVICE) $(CFLAGS)
 
 OBJPATH = obj
-OBJECTS = $(addprefix $(OBJPATH)/, mega.o avrdbg.o hw.o graph.o $(DISPLAY))
+OBJECTS = $(addprefix $(OBJPATH)/, main.o avrdbg.o hw.o graph.o $(DISPLAY))
 TGTNAME = $(OBJPATH)/$(TARGET)
 
 hex: $(TGTNAME).hex

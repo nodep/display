@@ -1,7 +1,6 @@
 #pragma once
 
-using Coord = uint16_t;
-using NumPixels = uint16_t;
+using Coord = int16_t;
 
 enum Color : uint8_t
 {
@@ -307,6 +306,7 @@ private:
 	ColorRGB	buffer[Width * Height];
 };
 
+// a window with better RAM 
 template <Coord W, Coord H>
 class Window
 {
