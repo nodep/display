@@ -13,14 +13,56 @@ protected:
 	//////////////////
 	// helpers
 	//////////////////
+	constexpr static PORT_t& get_port()
+	{
+		if constexpr (Port == 'A')
+			return PORTA;
+		else if constexpr (Port == 'B')
+			return PORTB;
+		else if constexpr (Port == 'C')
+			return PORTC;
+		else if constexpr (Port == 'D')
+			return PORTD;
+		else if constexpr (Port == 'E')
+			return PORTE;
+
+		return PORTF;
+	}
+
 	constexpr static register8_t& get_pinctrl()
 	{
-		return (&((&PORTA)[Port - 'A'].PIN0CTRL))[PinNum];
+		if constexpr (PinNum == 0)
+			return get_port().PIN0CTRL;
+		else if constexpr (PinNum == 1)
+			return get_port().PIN1CTRL;
+		else if constexpr (PinNum == 2)
+			return get_port().PIN2CTRL;
+		else if constexpr (PinNum == 3)
+			return get_port().PIN3CTRL;
+		else if constexpr (PinNum == 4)
+			return get_port().PIN4CTRL;
+		else if constexpr (PinNum == 5)
+			return get_port().PIN5CTRL;
+		else if constexpr (PinNum == 6)
+			return get_port().PIN6CTRL;
+
+		return get_port().PIN7CTRL;
 	}
 
 	constexpr static VPORT_t& get_vport()
 	{
-		return (&VPORTA)[Port - 'A'];
+		if constexpr (Port == 'A')
+			return VPORTA;
+		else if constexpr (Port == 'B')
+			return VPORTB;
+		else if constexpr (Port == 'C')
+			return VPORTC;
+		else if constexpr (Port == 'D')
+			return VPORTD;
+		else if constexpr (Port == 'E')
+			return VPORTE;
+
+		return VPORTF;
 	}
 
 	constexpr static uint8_t bitmask = 1 << PinNum;
@@ -56,16 +98,19 @@ public:
 	static void high()
 	{
 		get_vport().OUT |= bitmask;
+		//get_port().OUTSET = bitmask;
 	}
 
 	static void low()
 	{
 		get_vport().OUT &= ~bitmask;
+		//get_port().OUTCLR = bitmask;
 	}
 
 	static void toggle()
 	{
 		get_vport().IN |= bitmask;
+		//get_port().OUTTGL = bitmask;
 	}
 
 	static void set_value(const bool value)

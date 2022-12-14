@@ -15,7 +15,7 @@
 	#include "display9486.h"
 	using Display = Display9486;
 #else
-	#include "display.h"
+	#include "displaySpi.h"
 #endif
 
 const int DIAL_ARC_POINTS = 85;
@@ -75,7 +75,7 @@ void draw_dial(Canvas& canvas, Coord x, Coord y, uint8_t position, ColorT col)
 	draw_line(tb, x + 20, y + 20, x1, y1, col);
 }
 
-void draw_dial_at(const char* name, uint8_t position, Coord x, Coord y, Color col)
+void draw_dial_at(const char* name, const uint8_t position, Coord x, Coord y, Color col)
 {
 	{
 		Window<43, 36> win(colBlack);
@@ -127,7 +127,7 @@ int main()
 
 	d.init();
 
-	fill(d, colRed);
+	fill(d, colBlack);
 
 	while (true)
 	{

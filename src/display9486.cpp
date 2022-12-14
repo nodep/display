@@ -20,10 +20,6 @@
 	"nop	\n" \
 	::);
 
-const uint8_t EMASK = 0x38;
-const uint8_t GMASK = 0x20;
-const uint8_t HMASK = 0x78;
-
 enum ILICommands : uint8_t
 {
 	SOFTRESET			= 0x01,
@@ -164,6 +160,10 @@ void Display9486::init()
 	}
 }
 
+const uint8_t EMASK = 0x38;
+const uint8_t GMASK = 0x20;
+const uint8_t HMASK = 0x78;
+
 void Display9486::setWriteDir()
 {
 	DDRH |= HMASK;
@@ -240,11 +240,4 @@ void Display9486::set_addr_window(Coord x, Coord y, Coord w, Coord h)
 	write16(y + h - 1);
 
 	writeCmd8(MEMORYWRITE);
-}
-
-void Display9486::pixel(Coord x, Coord y, Color col)
-{
-	set_addr_window(x, y, 1, 1);
-
-	write16(color2rgb(col));
 }

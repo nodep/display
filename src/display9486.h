@@ -2,6 +2,9 @@
 
 #include "graph.h"
 
+// 8 bit parallel display. Shield on Arduino Mega 2560
+// Control pins on port F, data pins all over the place: ports 
+
 using rstPin = IoPin<'F', 4>;
 using csPin  = IoPin<'F', 3>;
 using cdPin  = IoPin<'F', 2>;
@@ -21,7 +24,12 @@ public:
     };
 
     static void init();
-    static void pixel(Coord x, Coord y, Color col);
+
+    static void pixel(Coord x, Coord y, Color col)
+    {
+        set_addr_window(x, y, 1, 1);
+        write16(color2rgb(col));
+    }
 
    	static void color(Color col)
 	{

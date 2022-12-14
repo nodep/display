@@ -5,7 +5,7 @@ DEVICE  = avr128da48
 ifeq ($(DEVICE), avr128da48)
   # Curiosity Nano with avr128da48
   AVRDUDE = avrdude -c pkobn_updi -p $(DEVICE)
-  DISPLAY = display.o
+  DISPLAY = displaySpi.o
   F_CPU = 24000000
 else
   # Arduino Mega 2560
