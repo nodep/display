@@ -46,9 +46,14 @@ public:
 		spi::send16(col);
 	}
 
+	static void color(ColorRGB colRGB)
+	{
+		spi::send16(colRGB);
+	}
+
 	static void color(Color col)
 	{
-		spi::send16(color2rgb(col));
+		color(color2rgb(col));
 	}
 
 	static void colors(Color col, uint16_t len)
@@ -93,7 +98,7 @@ public:
 			spi::send16(col);
 	}
 
-protected:
+private:
 
 	friend void fill_rect<Display>(Display& d, Coord x0, Coord y0, Coord w, Coord h, Color color);
 	friend void draw_raster<Display>(Display& d, const uint8_t* raster, Coord x, Coord y, Coord w, Coord h, Color color, Color bgcolor);

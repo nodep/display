@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.3.32929.385
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "graph_tool", "graph_tool.vcxproj", "{C33FFB24-38F1-4170-8237-ED442A04C92C}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x64 = Debug|x64
+		Debug|x86 = Debug|x86
+		Release|x64 = Release|x64
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{C33FFB24-38F1-4170-8237-ED442A04C92C}.Debug|x64.ActiveCfg = Debug|x64
+		{C33FFB24-38F1-4170-8237-ED442A04C92C}.Debug|x64.Build.0 = Debug|x64
+		{C33FFB24-38F1-4170-8237-ED442A04C92C}.Debug|x86.ActiveCfg = Debug|Win32
+		{C33FFB24-38F1-4170-8237-ED442A04C92C}.Debug|x86.Build.0 = Debug|Win32
+		{C33FFB24-38F1-4170-8237-ED442A04C92C}.Release|x64.ActiveCfg = Release|x64
+		{C33FFB24-38F1-4170-8237-ED442A04C92C}.Release|x64.Build.0 = Release|x64
+		{C33FFB24-38F1-4170-8237-ED442A04C92C}.Release|x86.ActiveCfg = Release|Win32
+		{C33FFB24-38F1-4170-8237-ED442A04C92C}.Release|x86.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {A68015D4-225E-419A-9E17-637179EACAAF}
+	EndGlobalSection
+EndGlobal
