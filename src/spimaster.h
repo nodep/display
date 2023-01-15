@@ -42,24 +42,16 @@ public:
 		get_spi().CTRLA = static_cast<uint8_t>(SPI_MASTER_bm | speed_flags() | SPI_ENABLE_bm);
 	}
 
-	// TODO: RX not implemented yet (we don't really need it for this project)
-	static void send(const uint8_t byte)
+	static uint8_t send(const uint8_t byte)
 	{
 		get_spi().DATA = byte;
 		loop_until_bit_is_set(get_spi().INTFLAGS, SPI_IF_bp);
+		return get_spi().DATA;
 	}
 
 	static void send16(const uint16_t word)
 	{
 		send(static_cast<uint8_t>(word >> 8));
 		send(static_cast<uint8_t>(word));
-	}
-
-	static void send32(const uint32_t dword)
-	{
-		send(static_cast<uint8_t>(dword >> 24));
-		send(static_cast<uint8_t>(dword >> 16));
-		send(static_cast<uint8_t>(dword >> 8));
-		send(static_cast<uint8_t>(dword));
 	}
 };

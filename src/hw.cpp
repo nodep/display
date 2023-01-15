@@ -1,7 +1,9 @@
+#include <stdio.h>
+
 #include <avr/io.h>
 
-#include "hw.h"
 #include "avrdbg.h"
+#include "hw.h"
 
 #ifdef __AVR_AVR128DA48__
 #endif

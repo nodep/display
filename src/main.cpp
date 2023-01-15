@@ -5,9 +5,10 @@
 #include <avr/pgmspace.h>
 #include <util/delay.h>
 
+#include "avrdbg.h"
+
 #include "hw.h"
 
-#include "avrdbg.h"
 #include "graph.h"
 #include "graphtext.h"
 
@@ -127,14 +128,30 @@ int main()
 
 	d.init();
 
+	fill(d, colBlack);
+
+	XPT2046_Touchscreen ts;
+	ts.begin();
+
 	while (true)
 	{
-		fill(d, colBlack);
+		static uint16_t prev = 0;
+		uint16_t cnt = Watch::cnt();
 
-		//fill_circle(d, 70, 26, 16, colGreen);
+		if (!tirq::in())
+		{
+			ts.touched();
+			char buff[20];
+			uint16_t diff = cnt - prev;
+			sprintf(buff, "%u", diff);
+			Window<100, 18> win(colBlack);
+			//fill_rect(d, 0, 0, 100, 20, colBlack);
+			print_large(win, buff, 0, 0, colWhite);
+			d.blit(win, 0, 0);
+		}
 
-		refresh_screen();
+		prev = cnt;
 
-		_delay_ms(2000);
+		//_delay_ms(1000);
 	}
 }
