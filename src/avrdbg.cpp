@@ -47,6 +47,8 @@ void dbgInit()
 
 	// we only want TX, RX is not needed
 	DebugUsart::enable(true, false);
+
+	dprint("\ni live...\n");
 }
 
 void printi(uint32_t i)

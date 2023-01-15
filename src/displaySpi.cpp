@@ -108,8 +108,11 @@ static const uint8_t init9341[] PROGMEM =
 		0x3e, 0x28,				// VCM control
 	cmdVCOMControl2, 1,
 		0x86,					// VCM control2
-	cmdMemoryAccessControl, 1,
-		0x48,					// Memory Access Control
+	cmdMemoryAccessControl, 1,	// Rotation:
+		0x88,					// 0x88: portrait, pins up
+								// 0x28: landscape, pins right
+								// 0x48: portrait, pins down
+								// 0xE8: landscape, pins left
 	cmdVerticalScrollStartAddress, 1,
 		0x00,					// Vertical scroll zero
 	cmdPixelFormat, 1,

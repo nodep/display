@@ -1,21 +1,11 @@
 #pragma once
 
-#include "iopin.h"
-#include "spimaster.h"
+#include "hw.h"
 
 #include "graph.h"
 
-// The code below is lifted from Adafruit's LCD arduino library
+// The code below is inspired by Adafruit's LCD arduino library
 // Thank you, Lady Ada!
-
-// the pins and HW we use here
-using miso	= IoPin<'A', 5>;
-using mosi	= IoPin<'A', 4>;
-using sck	= IoPin<'A', 6>;
-using ss	= IoPin<'A', 7>;
-using rst	= IoPin<'B', 0>;
-using dc	= IoPin<'B', 1>;
-using spi	= SpiMaster<0, 6>;
 
 class Display
 {
@@ -27,8 +17,8 @@ public:
 		~Transaction()	{ ss::high(); }
 	};
 
-	static const Coord Width = 128;
-	static const Coord Height = 160;
+	static const Coord Width = 240;
+	static const Coord Height = 320;
 
 	static void init();
 	static void off();
@@ -119,7 +109,8 @@ inline void fill_rect<Display>(Display&, Coord x, Coord y, Coord w, Coord h, Col
 	typename Display::Transaction t;
 
 	Display::set_addr_window(x, y, w, h);
-	Display::colors(color, w * h);
+	for (Coord r = 0; r < h; r++)
+		Display::colors(color, w);
 }
 
 template <>
