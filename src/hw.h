@@ -35,6 +35,6 @@ using dc	= IoPin<'B', 1>;
 using tirq  = IoPin<'B', 2>;
 using tss   = IoPin<'B', 3>;
 
-using spi	= SpiMaster<0, 3>;
+using spi	= SpiMaster<0, 5>;
 
 void init_hw();

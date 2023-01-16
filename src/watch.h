@@ -42,12 +42,26 @@ public:
 
 	static void start()
 	{
-		//RTC.CLKSEL = RTC_CLKSEL_XOSC32K_gc;
+		RTC.CLKSEL = RTC_CLKSEL_OSC32K_gc;
 		RTC.CTRLA = get_prescaler() | RTC_RTCEN_bm;
 	}
 
 	static uint16_t cnt()
 	{
 		return RTC.CNT;
+	}
+
+	static uint32_t cntlong()
+	{
+		static uint32_t ovf_cnt = 0;
+
+		const uint16_t c = cnt();
+		if (RTC.INTFLAGS & RTC_OVF_bm)
+		{
+			RTC.INTFLAGS = RTC_OVF_bm;
+			ovf_cnt += 0x10000;
+		}
+
+		return ovf_cnt | c;
 	}
 };

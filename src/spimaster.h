@@ -42,16 +42,17 @@ public:
 		get_spi().CTRLA = static_cast<uint8_t>(SPI_MASTER_bm | speed_flags() | SPI_ENABLE_bm);
 	}
 
-	static uint8_t send(const uint8_t byte)
+	static uint8_t send(uint8_t b)
 	{
-		get_spi().DATA = byte;
+		get_spi().DATA = b;
 		loop_until_bit_is_set(get_spi().INTFLAGS, SPI_IF_bp);
 		return get_spi().DATA;
 	}
 
-	static void send16(const uint16_t word)
+	static uint16_t send16(uint16_t w)
 	{
-		send(static_cast<uint8_t>(word >> 8));
-		send(static_cast<uint8_t>(word));
+		const uint16_t hi = send(static_cast<uint8_t>(w >> 8));
+		const uint8_t lo = send(static_cast<uint8_t>(w));
+		return (hi << 8) | lo;
 	}
 };

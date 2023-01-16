@@ -135,22 +135,13 @@ int main()
 
 	while (true)
 	{
-		static uint16_t prev = 0;
-		uint16_t cnt = Watch::cnt();
+		TS_Point p = ts.getPoint();
 
-		if (!tirq::in())
-		{
-			ts.touched();
-			char buff[20];
-			uint16_t diff = cnt - prev;
-			sprintf(buff, "%u", diff);
-			Window<100, 18> win(colBlack);
-			//fill_rect(d, 0, 0, 100, 20, colBlack);
-			print_large(win, buff, 0, 0, colWhite);
-			d.blit(win, 0, 0);
-		}
-
-		prev = cnt;
+		char buff[40];
+		sprintf(buff, "%d %d %d", p.x, p.y, p.z);
+		Window<140, 18> win(colBlack);
+		print_large(win, buff, 0, 0, colWhite);
+		d.blit(win, 0, 0);
 
 		//_delay_ms(1000);
 	}
