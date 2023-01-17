@@ -38,21 +38,6 @@ constexpr const ColorRGB rgbOrange		= colorRGB(31, 32,  0);
 constexpr const ColorRGB rgbGray		= colorRGB(16, 32, 16);
 constexpr const ColorRGB rgbDarkGray	= colorRGB( 8, 16,  8);
 
-constexpr static const ColorRGB Color2RGBMap[] =
-{
-	rgbBlack,
-	rgbWhite,
-	rgbRed,
-	rgbGreen,
-	rgbBlue,
-	rgbCyan,
-	rgbMagenta,
-	rgbYellow,
-	rgbOrange,
-	rgbGray,
-	rgbDarkGray,
-};
-
 extern ColorRGB customGraphCol;
 
 inline Color customRGB(uint8_t r, uint8_t g, uint8_t b)
@@ -61,24 +46,39 @@ inline Color customRGB(uint8_t r, uint8_t g, uint8_t b)
 	return colCustom;
 }
 
-constexpr inline ColorRGB color2rgb(const Color col)
+constexpr inline ColorRGB color2rgb(Color col)
 {
 	if (col == colCustom)
 		return customGraphCol;
 
+	constexpr const ColorRGB Color2RGBMap[] =
+	{
+		rgbBlack,
+		rgbWhite,
+		rgbRed,
+		rgbGreen,
+		rgbBlue,
+		rgbCyan,
+		rgbMagenta,
+		rgbYellow,
+		rgbOrange,
+		rgbGray,
+		rgbDarkGray,
+	};
+
 	return Color2RGBMap[col];
 }
 
-template <typename Canvas, typename ColorT>
-void draw_pixel(Canvas& canvas, Coord x, Coord y, ColorT color)
+template <typename Canvas>
+void draw_pixel(Canvas& canvas, Coord x, Coord y, Color color)
 {
 	[[maybe_unused]] typename Canvas::Transaction t;
 
 	canvas.pixel(x, y, color);
 }
 
-template <typename Canvas, typename ColorT>
-void draw_circle(Canvas& canvas, Coord x0, Coord y0, Coord r, ColorT color)
+template <typename Canvas>
+void draw_circle(Canvas& canvas, Coord x0, Coord y0, Coord r, Color color)
 {
 	[[maybe_unused]] typename Canvas::Transaction t;
 
@@ -117,24 +117,24 @@ void draw_circle(Canvas& canvas, Coord x0, Coord y0, Coord r, ColorT color)
 	}
 }
 
-template <typename Canvas, typename ColorT>
-void vline(Canvas& canvas, Coord x, Coord y, Coord l, ColorT color)
+template <typename Canvas>
+void vline(Canvas& canvas, Coord x, Coord y, Coord l, Color color)
 {
 	[[maybe_unused]] typename Canvas::Transaction t;
 
 	canvas.vline(x, y, l, color);
 }
 
-template <typename Canvas, typename ColorT>
-void hline(Canvas& canvas, Coord x, Coord y, Coord l, ColorT color)
+template <typename Canvas>
+void hline(Canvas& canvas, Coord x, Coord y, Coord l, Color color)
 {
 	[[maybe_unused]] typename Canvas::Transaction t;
 
 	canvas.hline(x, y, l, color);
 }
 
-template <typename Canvas, typename ColorT>
-void fill_circle(Canvas& canvas, Coord x0, Coord y0, Coord r, ColorT color)
+template <typename Canvas>
+void fill_circle(Canvas& canvas, Coord x0, Coord y0, Coord r, Color color)
 {
 	[[maybe_unused]] typename Canvas::Transaction t;
 
@@ -187,8 +187,8 @@ void swap(T& a1, T& a2)
 	a2 = temp;
 }
 
-template <typename Canvas, typename ColorT>
-void draw_line(Canvas& canvas, Coord x0, Coord y0, Coord x1, Coord y1, const ColorT color)
+template <typename Canvas>
+void draw_line(Canvas& canvas, Coord x0, Coord y0, Coord x1, Coord y1, Color color)
 {
 	[[maybe_unused]] typename Canvas::Transaction t;
 
@@ -233,8 +233,8 @@ void draw_line(Canvas& canvas, Coord x0, Coord y0, Coord x1, Coord y1, const Col
 	}
 }
 
-template <typename Canvas, typename ColorT>
-void fill_rect(Canvas& canvas, Coord x0, Coord y0, Coord w, Coord h, ColorT color)
+template <typename Canvas>
+void fill_rect(Canvas& canvas, Coord x0, Coord y0, Coord w, Coord h, Color color)
 {
 	[[maybe_unused]] typename Canvas::Transaction t;
 
@@ -243,8 +243,8 @@ void fill_rect(Canvas& canvas, Coord x0, Coord y0, Coord w, Coord h, ColorT colo
 			canvas.pixel(x, y, color);
 }
 
-template <typename Canvas, typename ColorT>
-void draw_raster(Canvas& canvas, const uint8_t* raster, Coord x0, Coord y0, Coord w, Coord h, ColorT color, ColorT bgcolor)
+template <typename Canvas>
+void draw_raster(Canvas& canvas, const uint8_t* raster, Coord x0, Coord y0, Coord w, Coord h, Color color, Color bgcolor)
 {
 	[[maybe_unused]] typename Canvas::Transaction t;
 
@@ -279,8 +279,8 @@ void draw_raster(Canvas& canvas, const uint8_t* raster, Coord x0, Coord y0, Coor
 	}
 }
 
-template <typename Canvas, typename ColorT>
-void fill(Canvas& c, ColorT col)
+template <typename Canvas>
+void fill(Canvas& c, Color col)
 {
 	fill_rect(c, 0, 0, Canvas::Width, Canvas::Height, col);
 }
@@ -305,26 +305,22 @@ public:
 		: WindowRGB(color2rgb(colbgnd))
 	{}
 
-	void pixel(Coord x, Coord y, ColorRGB color)
-	{
-		if (x < Width  &&  y < Height)
-			buffer[y * Width + x] = color;
-	}
-
 	void pixel(Coord x, Coord y, Color color)
 	{
-		pixel(x, y, color2rgb(color));
+		if (x < Width  &&  y < Height)
+			buffer[y * Width + x] = color2rgb(color);
 	}
 
 	void vline(Coord x, Coord y, Coord len, ColorRGB color)
 	{
 		for (Coord y1 = y; y1 < y + len; ++y1)
-			pixel(x, y1, color);
+			pixel(x, y1, color2rgb(color));
 	}
 
-	void vline(Coord x, Coord y, Coord len, Color color)
+	void hline(Coord x, Coord y, Coord len, ColorRGB color)
 	{
-		vline(x, y, len, color2rgb(color));
+		for (Coord x1 = x; x1 < x + len; ++x1)
+			pixel(x1, y, color2rgb(color));
 	}
 
 private:
@@ -332,7 +328,7 @@ private:
 	ColorRGB	buffer[Width * Height];
 };
 
-// a window with better RAM 
+// a window with better RAM usage but only a 16 color palette
 template <Coord W, Coord H>
 class Window
 {
@@ -353,6 +349,12 @@ public:
 	{
 		for (Coord y1 = y; y1 < y + len; ++y1)
 			pixel(x, y1, color);
+	}
+
+	void hline(Coord x, Coord y, Coord len, Color color)
+	{
+		for (Coord x1 = x; x1 < x + len; ++x1)
+			pixel(x1, y, color);
 	}
 
 	void pixel(Coord x, Coord y, Color color)

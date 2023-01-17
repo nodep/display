@@ -24,21 +24,9 @@ public:
 	static void off();
 	static void on();
 
-	static void pixel(Coord x, Coord y, Color col)
+	static void color(ColorRGB colRGB)
 	{
-		set_addr_window(x, y, 1, 1);
-		color(col);
-	}
-
-	static void pixel(Coord x, Coord y, ColorRGB col)
-	{
-		set_addr_window(x, y, 1, 1);
-		spi::send16(col);
-	}
-
-	static void color(ColorRGB colorRGB)
-	{
-		spi::send16(colorRGB);
+		spi::send16(colRGB);
 	}
 
 	static void color(Color col)
@@ -46,16 +34,16 @@ public:
 		color(color2rgb(col));
 	}
 
+	static void pixel(Coord x, Coord y, Color col)
+	{
+		set_addr_window(x, y, 1, 1);
+		color(col);
+	}
+
 	static void colors(Color col, uint16_t len)
 	{
 		for (uint16_t c = 0; c < len; c++)
 			color(col);
-	}
-
-	static void colors(ColorRGB colorRGB, uint16_t len)
-	{
-		for (uint16_t c = 0; c < len; c++)
-			color(colorRGB);
 	}
 
 	static void hline(Coord x, Coord y, Coord len, Color color)
@@ -97,7 +85,6 @@ public:
 private:
 
 	friend void fill_rect<Display>(Display& d, Coord x0, Coord y0, Coord w, Coord h, Color color);
-	friend void fill_rect<Display>(Display& d, Coord x0, Coord y0, Coord w, Coord h, ColorRGB colorRGB);
 	friend void draw_raster<Display>(Display& d, const uint8_t* raster, Coord x, Coord y, Coord w, Coord h, Color color, Color bgcolor);
 
 	static void send_init_command(uint8_t commandByte, const uint8_t* dataBytes, uint8_t numDataBytes);
@@ -118,17 +105,6 @@ inline void fill_rect<Display>(Display&, Coord x, Coord y, Coord w, Coord h, Col
 	Display::set_addr_window(x, y, w, h);
 	for (Coord r = 0; r < h; r++)
 		Display::colors(color, w);
-}
-
-// while we wait for template function partial specialisation...
-template <>
-inline void fill_rect<Display>(Display&, Coord x, Coord y, Coord w, Coord h, ColorRGB colorRGB)
-{
-	typename Display::Transaction t;
-
-	Display::set_addr_window(x, y, w, h);
-	for (Coord r = 0; r < h; r++)
-		Display::colors(colorRGB, w);
 }
 
 template <>

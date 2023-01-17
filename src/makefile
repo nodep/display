@@ -3,7 +3,6 @@ DEVICE  = avr128da48
 
 # Curiosity Nano with avr128da48
 AVRDUDE = avrdude -c pkobn_updi -p $(DEVICE)
-DISPLAY = displaySpi.o
 F_CPU = 24000000
 
 CFLAGS  = -std=c++20 -Wall -O2 -DF_CPU=$(F_CPU)
@@ -27,7 +26,7 @@ LFLAGS += -Wl,-u,vfprintf -lprintf_flt -lm
 COMPILE = avr-g++ -mmcu=$(DEVICE) $(CFLAGS)
 
 OBJPATH = obj
-OBJECTS = $(addprefix $(OBJPATH)/, main.o avrdbg.o hw.o graph.o touchscreen.o $(DISPLAY))
+OBJECTS = $(addprefix $(OBJPATH)/, main.o avrdbg.o hw.o graph.o touchscreen.o displaySpi.o)
 TGTNAME = $(OBJPATH)/$(TARGET)
 
 hex: $(TGTNAME).hex
