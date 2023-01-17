@@ -127,14 +127,16 @@ int main()
 	ts.init();
 	//ts.calibrate(d);
 
+	//uint8_t r = 0;
+	//uint8_t g = 0;
+	//uint8_t b = 0;
 	while (true)
 	{
 		TS_Point p = ts.get_point();
 
 		if (p.valid())
 		{
-			draw_pixel(d, p.x, p.y, colWhite);
-			//fill_rect(d, p.x, p.y, 3, 3, colWhite);
+			fill_rect(d, p.x, p.y, 3, 3, colorRGB(rand() & 0x1f, rand() & 0x3f, rand() & 0x1f));
 		}
 	}
 }

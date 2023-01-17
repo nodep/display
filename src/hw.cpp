@@ -35,12 +35,6 @@ static void init_mcu()
 
 	// USART 3 is on ALT1: TX->PB4 RX->PB5
 	PORTMUX.USARTROUTEA = PORTMUX_USART3_0_bm;
-
-	led::dir_out();
-	led::invert();
-
-	btn::dir_in();
-	btn::pullup();
 }
 
 // init the CPU clock, PORTMUX, and onboard LED and button
@@ -50,6 +44,11 @@ void init_hw()
 
 	dbgInit();
 
-	// setup our main clock
-	Watch::start();
+	watch::start();
+
+	led::dir_out();
+	led::invert();
+
+	btn::dir_in();
+	btn::pullup();
 }

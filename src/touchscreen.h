@@ -28,7 +28,7 @@ struct TS_Point
 
 	bool valid() const
 	{
-		const int16_t Z_THRESHOLD = 300;
+		const int16_t Z_THRESHOLD = 400;
 		return z > Z_THRESHOLD;
 	}
 };
@@ -53,9 +53,6 @@ struct Touchscreen_XPT2046
 
 	void init()
 	{
-		tirq::pullup();
-		tirq::dir_in();
-
 		tss::high();
 		tss::dir_out();
 

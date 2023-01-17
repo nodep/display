@@ -52,6 +52,12 @@ public:
 			color(col);
 	}
 
+	static void colors(ColorRGB colRGB, uint16_t len)
+	{
+		for (uint16_t c = 0; c < len; c++)
+			color(colRGB);
+	}
+
 	static void hline(Coord x, Coord y, Coord len, Color color)
 	{
 		set_addr_window(x, y, len, 1);
@@ -91,6 +97,7 @@ public:
 private:
 
 	friend void fill_rect<Display>(Display& d, Coord x0, Coord y0, Coord w, Coord h, Color color);
+	friend void fill_rect<Display>(Display& d, Coord x0, Coord y0, Coord w, Coord h, ColorRGB colRGB);
 	friend void draw_raster<Display>(Display& d, const uint8_t* raster, Coord x, Coord y, Coord w, Coord h, Color color, Color bgcolor);
 
 	static void send_init_command(uint8_t commandByte, const uint8_t* dataBytes, uint8_t numDataBytes);
@@ -111,6 +118,17 @@ inline void fill_rect<Display>(Display&, Coord x, Coord y, Coord w, Coord h, Col
 	Display::set_addr_window(x, y, w, h);
 	for (Coord r = 0; r < h; r++)
 		Display::colors(color, w);
+}
+
+// while we wait for template function partial specialisation...
+template <>
+inline void fill_rect<Display>(Display&, Coord x, Coord y, Coord w, Coord h, ColorRGB colRGB)
+{
+	typename Display::Transaction t;
+
+	Display::set_addr_window(x, y, w, h);
+	for (Coord r = 0; r < h; r++)
+		Display::colors(colRGB, w);
 }
 
 template <>

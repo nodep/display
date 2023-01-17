@@ -87,8 +87,6 @@ TS_Point Touchscreen_XPT2046::get_point()
 {
 	TS_Point p = get_point_raw();
 
-	//dprint("%f %f %f %f %d %d\n", (double)xCalM, (double)xCalC, (double)yCalM, (double)yCalC, p.x, p.y);
-
 	p.x = round(p.x * xCalM + xCalC);
 	p.y = round(p.y * yCalM + yCalC);
 
@@ -101,8 +99,6 @@ TS_Point Touchscreen_XPT2046::get_point()
 		p.y = 0;
 	if (p.y >= disp_height)
 		p.y = disp_height - 1;
-
-	dprint("%f %f %f %f %d %d\n", (double)xCalM, (double)xCalC, (double)yCalM, (double)yCalC, p.x, p.y);
 
 	return p;
 }
