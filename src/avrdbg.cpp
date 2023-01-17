@@ -4,13 +4,13 @@
 
 #if _DEBUG
 
-#include "avrdbg.h"
 #include "hw.h"
+#include "avrdbg.h"
 
-#ifdef __AVR_ATmega2560__
-using DebugUsart = Usart;
-#else
+#ifdef __AVR_AVR128DA48__
 using DebugUsart = Usart<1>;
+#else
+using DebugUsart = Usart;
 #endif
 
 #ifndef _WIN32

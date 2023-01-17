@@ -5,10 +5,8 @@
 #include <avr/pgmspace.h>
 #include <util/delay.h>
 
-#include "iopin.h"
-#include "spimaster.h"
+#include "hw.h"
 #include "avrdbg.h"
-
 #include "displaySpi.h"
 
 enum DisplayCommands : uint8_t
@@ -274,117 +272,4 @@ void Display::set_addr_window(const Coord x, const Coord y, const Coord w, const
 	spi::send16(y + h - 1);
 
 	send_command(cmdMemoryWrite);		// write to RAM
-}
-
-// ***********************************************************
-
-const int16_t Z_THRESHOLD = 300;
-const uint16_t REFRESH_TIME = 3;
-
-void XPT2046_Touchscreen::begin()
-{
-	tirq::pullup();
-	tirq::dir_in();
-
-	tss::high();
-	tss::dir_out();
-}
-
-TS_Point XPT2046_Touchscreen::getPoint()
-{
-	update();
-	return TS_Point(xraw, yraw, zraw);
-}
-
-bool XPT2046_Touchscreen::touched()
-{
-	update();
-	return zraw >= Z_THRESHOLD;
-}
-
-static int16_t besttwoavg(int16_t x, int16_t y, int16_t z)
-{
-	const int16_t da = x > y ? x - y : y - x;
-	const int16_t db = x > z ? x - z : z - x;
-	const int16_t dc = z > y ? z - y : y - z;
-
-	int16_t reta = 0;
-	if (da <= db  &&  da <= dc)
-		reta = (x + y) >> 1;
-	else if (db <= da  &&  db <= dc)
-		reta = (x + z) >> 1;
-	else
-		reta = (y + z) >> 1;
-
-	return reta;
-}
-
-void XPT2046_Touchscreen::update()
-{
-	const uint16_t now = Watch::cnt();
-	if (now - msraw < REFRESH_TIME)
-		return;
-
-	int16_t data[6] = {0};
-
-	tss::low();
-	spi::send(0xB1 /* Z1 */);
-	const int16_t z1 = spi::send16(0xC1 /* Z2 */) >> 3;
-	const int16_t z2 = spi::send16(0x91 /* X */) >> 3;
-	int16_t z = z1 + 4095 - z2;
-	if (z >= Z_THRESHOLD)
-	{
-		spi::send16(0x91 /* X */);  // dummy X measure, 1st is always noisy
-		data[0] = spi::send16(0xD1 /* Y */) >> 3;
-		data[1] = spi::send16(0x91 /* X */) >> 3; // make 3 x-y measurements
-		data[2] = spi::send16(0xD1 /* Y */) >> 3;
-		data[3] = spi::send16(0x91 /* X */) >> 3;
-	}
-
-	data[4] = spi::send16(0xD0 /* Y */) >> 3;	// Last Y touch power down
-	data[5] = spi::send16(0) >> 3;
-	tss::high();
-
-	//dprint("z=%d z1=%d z2=%d\n", z, z1, z2);
-	
-	if (z < 0)
-		z = 0;
-
-	if (z < Z_THRESHOLD)
-	{
-		zraw = 0;
-		return;
-	}
-
-	zraw = z;
-
-	// Average pair with least distance between each measured x then y
-	const int16_t x = besttwoavg(data[0], data[2], data[4]);
-	const int16_t y = besttwoavg(data[1], data[3], data[5]);
-
-	if (z >= Z_THRESHOLD)
-	{
-		msraw = now;	// good read completed, set wait
-		const uint8_t rotation = 0;
-		switch (rotation)
-		{
-		case 0:
-			xraw = 4095 - y;
-			yraw = x;
-			break;
-		case 1:
-			xraw = x;
-			yraw = y;	
-			break;
-		case 2:
-			xraw = y;
-			yraw = 4095 - x;
-			break;
-		default: // 3
-			xraw = 4095 - x;
-			yraw = 4095 - y;
-		}
-	}
-
-	//dprint("%d %d %d\n", xraw, yraw, zraw);
 }

@@ -108,6 +108,22 @@ void draw_circle(Canvas& canvas, Coord x0, Coord y0, Coord r, ColorT color)
 }
 
 template <typename Canvas, typename ColorT>
+void vline(Canvas& canvas, Coord x, Coord y, Coord l, ColorT color)
+{
+	[[maybe_unused]] typename Canvas::Transaction t;
+
+	canvas.vline(x, y, l, color);
+}
+
+template <typename Canvas, typename ColorT>
+void hline(Canvas& canvas, Coord x, Coord y, Coord l, ColorT color)
+{
+	[[maybe_unused]] typename Canvas::Transaction t;
+
+	canvas.hline(x, y, l, color);
+}
+
+template <typename Canvas, typename ColorT>
 void fill_circle(Canvas& canvas, Coord x0, Coord y0, Coord r, ColorT color)
 {
 	[[maybe_unused]] typename Canvas::Transaction t;

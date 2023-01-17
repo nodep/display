@@ -1,18 +1,10 @@
 TARGET  = displays
-#DEVICE  = atmega2560
 DEVICE  = avr128da48
 
-ifeq ($(DEVICE), avr128da48)
-  # Curiosity Nano with avr128da48
-  AVRDUDE = avrdude -c pkobn_updi -p $(DEVICE)
-  DISPLAY = displaySpi.o
-  F_CPU = 24000000
-else
-  # Arduino Mega 2560
-  AVRDUDE = avrdude -c wiring -P COM4 -b 115200 -D -p $(DEVICE)
-  DISPLAY = display9486.o
-  F_CPU = 16000000
-endif
+# Curiosity Nano with avr128da48
+AVRDUDE = avrdude -c pkobn_updi -p $(DEVICE)
+DISPLAY = displaySpi.o
+F_CPU = 24000000
 
 CFLAGS  = -std=c++20 -Wall -O2 -DF_CPU=$(F_CPU)
 CFLAGS += -ffunction-sections -fdata-sections
@@ -23,7 +15,7 @@ CFLAGS += --param=min-pagesize=0 -Wno-volatile
 
 LFLAGS  = -Wl,--relax,--gc-sections
 #LFLAGS += -Wl,-u,vfprintf -lprintf_min
-#LFLAGS += -Wl,-u,vfprintf -lprintf_flt -lm
+LFLAGS += -Wl,-u,vfprintf -lprintf_flt -lm
 
 # I used avr-gcc 12.1 which I got from here:
 # https://blog.zakkemble.net/avr-gcc-builds/
@@ -35,7 +27,7 @@ LFLAGS  = -Wl,--relax,--gc-sections
 COMPILE = avr-g++ -mmcu=$(DEVICE) $(CFLAGS)
 
 OBJPATH = obj
-OBJECTS = $(addprefix $(OBJPATH)/, main.o avrdbg.o hw.o graph.o $(DISPLAY))
+OBJECTS = $(addprefix $(OBJPATH)/, main.o avrdbg.o hw.o graph.o touchscreen.o $(DISPLAY))
 TGTNAME = $(OBJPATH)/$(TARGET)
 
 hex: $(TGTNAME).hex

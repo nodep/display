@@ -45,13 +45,13 @@ public:
 
 	static void enable(const bool tx, const bool rx)
 	{
-	    UCSR0B = (tx ? _BV(TXEN0) : 0) | (rx ? _BV(RXEN0) : 0);
+		UCSR0B = (tx ? _BV(TXEN0) : 0) | (rx ? _BV(RXEN0) : 0);
 	}
 
 	static void send_byte(const uint8_t b)
 	{
-	    loop_until_bit_is_set(UCSR0A, UDRE0);
-	    UDR0 = b;
+		loop_until_bit_is_set(UCSR0A, UDRE0);
+		UDR0 = b;
 	}
 
 	static bool read_byte(uint8_t& b)

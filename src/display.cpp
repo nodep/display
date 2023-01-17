@@ -4,9 +4,7 @@
 #include <avr/pgmspace.h>
 #include <util/delay.h>
 
-#include "iopin.h"
-#include "spimaster.h"
-#include "avrdbg.h"
+#include "hw.h"
 
 #include "display.h"
 

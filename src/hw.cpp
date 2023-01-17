@@ -5,13 +5,7 @@
 #include "avrdbg.h"
 #include "hw.h"
 
-#ifdef __AVR_AVR128DA48__
-#endif
-#ifdef __AVR_ATmega2560__
-#endif
-
 static void init_mcu()
-#ifdef __AVR_AVR128DA48__
 {
 	CPU_CCP = CCP_IOREG_gc;
 #if   F_CPU == 1000000
@@ -48,11 +42,6 @@ static void init_mcu()
 	btn::dir_in();
 	btn::pullup();
 }
-#else
-{
-	led::dir_out();
-}
-#endif
 
 // init the CPU clock, PORTMUX, and onboard LED and button
 void init_hw()

@@ -5,19 +5,14 @@
 #include <avr/pgmspace.h>
 #include <util/delay.h>
 
-#include "avrdbg.h"
-
 #include "hw.h"
+#include "avrdbg.h"
 
 #include "graph.h"
 #include "graphtext.h"
 
-#ifdef __AVR_ATmega2560__
-	#include "display9486.h"
-	using Display = Display9486;
-#else
-	#include "displaySpi.h"
-#endif
+#include "displaySpi.h"
+#include "touchscreen.h"
 
 const int DIAL_ARC_POINTS = 85;
 
@@ -125,24 +120,21 @@ int main()
 	init_hw();
 
 	Display d;
-
 	d.init();
-
 	fill(d, colBlack);
 
-	XPT2046_Touchscreen ts;
-	ts.begin();
+	Touchscreen_XPT2046 ts;
+	ts.init();
+	//ts.calibrate(d);
 
 	while (true)
 	{
-		TS_Point p = ts.getPoint();
+		TS_Point p = ts.get_point();
 
-		char buff[40];
-		sprintf(buff, "%d %d %d", p.x, p.y, p.z);
-		Window<140, 18> win(colBlack);
-		print_large(win, buff, 0, 0, colWhite);
-		d.blit(win, 0, 0);
-
-		//_delay_ms(1000);
+		if (p.valid())
+		{
+			draw_pixel(d, p.x, p.y, colWhite);
+			//fill_rect(d, p.x, p.y, 3, 3, colWhite);
+		}
 	}
 }
