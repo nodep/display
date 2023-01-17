@@ -22,6 +22,8 @@
 
 #include "fonts/Org_01.h"
 
+ColorRGB customGraphCol = rgbBlack;
+
 const GFXfont* largeFont = &FreeSans9pt7b;
 
 uint16_t get_text_width_large(const char* text)

@@ -13,9 +13,10 @@ enum Color : uint8_t
 	colMagenta,
 	colYellow,
 	colOrange,
-	colLightGray,
 	colGray,
 	colDarkGray,
+
+	colCustom,
 };
 
 using ColorRGB = uint16_t;
@@ -34,7 +35,6 @@ constexpr const ColorRGB rgbCyan		= colorRGB( 0, 63, 31);
 constexpr const ColorRGB rgbMagenta		= colorRGB(31,  0, 31);
 constexpr const ColorRGB rgbYellow		= colorRGB(31, 63,  0);
 constexpr const ColorRGB rgbOrange		= colorRGB(31, 32,  0);
-constexpr const ColorRGB rgbLightGray	= colorRGB(24, 48, 24);
 constexpr const ColorRGB rgbGray		= colorRGB(16, 32, 16);
 constexpr const ColorRGB rgbDarkGray	= colorRGB( 8, 16,  8);
 
@@ -49,13 +49,23 @@ constexpr static const ColorRGB Color2RGBMap[] =
 	rgbMagenta,
 	rgbYellow,
 	rgbOrange,
-	rgbLightGray,
 	rgbGray,
 	rgbDarkGray,
 };
 
+extern ColorRGB customGraphCol;
+
+inline Color customRGB(uint8_t r, uint8_t g, uint8_t b)
+{
+	customGraphCol = colorRGB(r, g, b);
+	return colCustom;
+}
+
 constexpr inline ColorRGB color2rgb(const Color col)
 {
+	if (col == colCustom)
+		return customGraphCol;
+
 	return Color2RGBMap[col];
 }
 
