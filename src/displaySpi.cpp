@@ -355,6 +355,7 @@ void XPT2046_Touchscreen::update()
 		zraw = 0;
 		return;
 	}
+
 	zraw = z;
 
 	// Average pair with least distance between each measured x then y
