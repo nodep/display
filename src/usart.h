@@ -23,7 +23,7 @@ protected:
 public:
 	static void set_baud(const uint32_t baud)
 	{
-		const uint16_t b = static_cast<uint16_t>((float)(F_CPU * 64 / (16 * (float)baud)) + 0.5);
+		const uint16_t b = static_cast<uint16_t>((double)(F_CPU * 64 / (16 * (double)baud)) + 0.5);
 
 		get_usart().BAUD = b;
 	}

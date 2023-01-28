@@ -35,18 +35,18 @@ struct TS_Point
 
 struct Touchscreen_XPT2046
 {
-	//float xCalM = 1;
-	//float xCalC = 0;
-	//float yCalM = 1;
-	//float yCalC = 0;
+	//double xCalM = 1;
+	//double xCalC = 0;
+	//double yCalM = 1;
+	//double yCalC = 0;
 
 	//int16_t disp_width = 0xffff;
 	//int16_t disp_height = 0xffff;
 
-	float xCalM = 0.071891;
-	float xCalC = -25.938175;
-	float yCalM = 0.090439;
-	float yCalC = -36.434109;
+	double xCalM = 0.071891;
+	double xCalC = -25.938175;
+	double yCalM = 0.090439;
+	double yCalC = -36.434109;
 
 	int16_t disp_width = 240;
 	int16_t disp_height = 320;
@@ -101,8 +101,8 @@ struct Touchscreen_XPT2046
 		vline(d, D::Width - 20, D::Height - 30, 20, colBlack);
 		
 		// translate to form pos = m * val + c
-		const float xDist = D::Width - 40;
-		const float yDist = D::Height - 40;
+		const double xDist = D::Width - 40;
+		const double yDist = D::Height - 40;
 		
 		xCalM = xDist / (x2 - x1);
 		xCalC = 20.0 - x1 * xCalM;
